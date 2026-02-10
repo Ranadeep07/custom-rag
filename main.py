@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, HTTPException, Header
 from pydantic import BaseModel
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 
 from chunking import chunk_text
 from embeddings import embed
@@ -12,16 +12,18 @@ from rag import answer
 # Load environment variables
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-API_TOKEN = os.getenv("API_TOKEN")  # <- new token for protection
+API_TOKEN = os.getenv("API_TOKEN")  # <- token for protection
 
 if not GEMINI_API_KEY or not API_TOKEN:
     raise ValueError("Missing GEMINI_API_KEY or API_TOKEN in environment")
 
-# Configure Gemini API
-genai.configure(api_key=GEMINI_API_KEY)
+# Initialize Gemini client
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 # Load your document and prepare embeddings
-text = open("data.txt").read()
+with open("data.txt") as f:
+    text = f.read()
+
 chunks = chunk_text(text, 600, 100)
 embeddings = embed(chunks)
 
@@ -48,6 +50,9 @@ def ask_question(request: QueryRequest, x_api_key: str = Header(...)):
     # Run RAG
     try:
         result = answer(request.query, chunks, store)
-        return {"query": request.query, "answer": result}
+        return {
+            "query": request.query,
+            "answer": result
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

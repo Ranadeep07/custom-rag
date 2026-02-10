@@ -1,14 +1,19 @@
-import google.generativeai as genai
+from google import genai
 from config import GEN_MODEL, TOP_K, EMBED_MODEL
-from embeddings import embed
+from embeddings import embed  # (still fine if you use it elsewhere)
+
+client = genai.Client()
 
 def answer(query, chunks, store):
-    q_embed = genai.embed_content(
+    # Embed the query
+    response = client.models.embed_content(
         model=EMBED_MODEL,
-        content=query,
-        task_type="retrieval_query"
-    )["embedding"]
+        contents=query,
+        task_type="retrieval_query",
+    )
+    q_embed = response.embeddings[0].values
 
+    # Vector search
     indices = store.search(q_embed, TOP_K)
     context = "\n\n".join([chunks[i] for i in indices])
 
@@ -23,5 +28,10 @@ Question:
 {query}
 """
 
-    model = genai.GenerativeModel(GEN_MODEL)
-    return model.generate_content(prompt).text
+    # Generate answer
+    response = client.models.generate_content(
+        model=GEN_MODEL,
+        contents=prompt,
+    )
+
+    return response.text
