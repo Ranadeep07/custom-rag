@@ -1,6 +1,7 @@
 from google import genai
+from google.genai import types
 from config import GEN_MODEL, TOP_K, EMBED_MODEL
-from embeddings import embed  # (still fine if you use it elsewhere)
+from embeddings import embed
 
 client = genai.Client()
 
@@ -9,7 +10,9 @@ def answer(query, chunks, store):
     response = client.models.embed_content(
         model=EMBED_MODEL,
         contents=query,
-        task_type="retrieval_query",
+        config=types.EmbedContentConfig(
+            task_type=types.EmbedContentConfig.TaskType.RETRIEVAL_QUERY
+        )
     )
     q_embed = response.embeddings[0].values
 
