@@ -11,7 +11,7 @@ def answer(query, chunks, store):
         model=EMBED_MODEL,
         contents=query,
         config=types.EmbedContentConfig(
-            task_type=types.EmbedContentConfig.TaskType.RETRIEVAL_QUERY
+            task_type="RETRIEVAL_QUERY"
         )
     )
     q_embed = response.embeddings[0].values

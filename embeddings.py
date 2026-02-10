@@ -11,7 +11,7 @@ def embed(texts):
             model=EMBED_MODEL,
             contents=text,
             config=types.EmbedContentConfig(
-                task_type=types.EmbedContentConfig.TaskType.RETRIEVAL_DOCUMENT
+                task_type="RETRIEVAL_DOCUMENT"
             )
         )
         embeddings.append(response.embeddings[0].values)
