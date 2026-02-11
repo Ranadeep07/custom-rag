@@ -3,8 +3,6 @@ from google import genai
 from google.genai import types
 from config import EMBED_MODEL
 
-client = genai.Client()
-
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def embed(texts):
