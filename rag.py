@@ -1,7 +1,6 @@
 from google import genai
 from google.genai import types
 from config import GEN_MODEL, TOP_K, EMBED_MODEL
-from embeddings import embed
 
 client = genai.Client()
 
