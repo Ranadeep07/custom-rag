@@ -1,10 +1,11 @@
 # embeddings.py
+import os
 from google import genai
 from google.genai import types
 from config import EMBED_MODEL  # e.g., "gemini-embedding-001"
 
 # Initialize client with API key from environment variable
-client = genai.Client()  # Assumes GENAI_API_KEY is set in env
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def embed(texts):
     """
