@@ -17,6 +17,14 @@ def answer(query, chunks, store):
 
     # Vector search
     indices = store.search(q_embed, TOP_K)
+
+    print("\n========== TOP K RETRIEVED CHUNKS ==========")
+    for rank, idx in enumerate(indices):
+        print(f"\nRank {rank + 1} | Chunk Index: {idx}")
+        print("--------------------------------------------")
+        print(chunks[idx])
+    print("============================================\n")
+    
     context = "\n\n".join([chunks[i] for i in indices])
 
     prompt = f"""

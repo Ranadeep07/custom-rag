@@ -8,6 +8,7 @@ from chunking import chunk_text
 from embeddings import embed
 from vectorstore import VectorStore
 from rag import answer
+from config import CHUNK_SIZE, CHUNK_OVERLAP
 
 # Load environment variables
 load_dotenv()
@@ -24,7 +25,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 with open("data.txt") as f:
     text = f.read()
 
-chunks = chunk_text(text, 600, 100)
+chunks = chunk_text(text, CHUNK_SIZE, CHUNK_OVERLAP)
 embeddings = embed(chunks)
 
 store = VectorStore(len(embeddings[0]))

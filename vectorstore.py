@@ -12,4 +12,5 @@ class VectorStore:
         _, indices = self.index.search(
             np.array([query_embedding]).astype("float32"), k
         )
+        print("FAISS indices:", indices)
         return indices[0]
